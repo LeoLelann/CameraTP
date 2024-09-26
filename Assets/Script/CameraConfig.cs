@@ -13,7 +13,7 @@ public struct CameraConfig
 
     public Quaternion GetRotation()
     {
-        return Quaternion.Euler(Yaw, Pitch, Roll);
+        return Quaternion.Euler(Pitch, Yaw, Roll);
     }
 
     public Vector3 GetPos()
