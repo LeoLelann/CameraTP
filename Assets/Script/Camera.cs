@@ -1,34 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-
-[SerializeField] public struct CameraConfig
+[Serializable]
+public struct CameraConfig
 {
-    [SerializeField] public float yaw;
-    [SerializeField] public float pitch;
-    [SerializeField] public float roll;
-    [SerializeField] public Vector3 pivot;
-    [SerializeField] public Vector3 distance;
-    [SerializeField] public float fov;
-    
+    public float Yaw;
+    public float Pitch;
+    public float Roll;
+    public Vector3 Pivot;
+    public Vector3 Distance;
+    public float Fov;
+
     public Quaternion GetRotation()
     {
-        return Quaternion.Euler(yaw, pitch, roll);
+        return Quaternion.Euler(Yaw, Pitch, Roll);
     }
+
     public Vector3 GetPos()
     {
-        return pivot + distance;
+        return Pivot + Distance;
     }
 
     public void DrawGizmos(Color color)
     {
         Gizmos.color = color;
-        Gizmos.DrawSphere(pivot, 0.25f);
+        Gizmos.DrawSphere(Pivot, 0.25f);
         Vector3 position = GetPos();
-        Gizmos.DrawLine(pivot, position);
+        Gizmos.DrawLine(Pivot, position);
         Gizmos.matrix = Matrix4x4.TRS(position, GetRotation(), Vector3.one);
-        Gizmos.DrawFrustum(Vector3.zero, fov, 0.5f, 0f, Camera.main.aspect);
+        Gizmos.DrawFrustum(Vector3.zero, Fov, 0.5f, 0f, Camera.main.aspect);
         Gizmos.matrix = Matrix4x4.identity;
     }
 }

@@ -1,39 +1,52 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] public Camera _camera;
-    public CameraConfig configuration;
+    public Camera CameraComp;
+    public CameraConfig Configuration;
 
-    private static CameraController instance = null;
-    public static CameraController Instance => instance;
+    private static CameraController _instance = null;
+    public static CameraController Instance => _instance;
 
     private void Awake()
     {
-        if (instance != null && instance != this)
+        if (_instance != null && _instance != this)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
             return;
         }
         else
         {
-            instance = this;
+            _instance = this;
         }
-        DontDestroyOnLoad(this);
+
+        DontDestroyOnLoad(gameObject);
     }
+
     private void Start()
     {
-        _camera = GetComponent<Camera>();
+        CameraComp = GetComponent<Camera>();
     }
+
     void ApplyConfiguration()
     {
-        _camera.transform.position = configuration.GetPos();
-        _camera.transform.rotation = configuration.GetRotation();
+        CameraComp.transform.position = Configuration.GetPos();
+        CameraComp.transform.rotation = Configuration.GetRotation();
+        CameraComp.fieldOfView = Configuration.Fov;
     }
+
     private void Update()
     {
         ApplyConfiguration();
+    }
+
+    void OnDrawGizmos()
+    {
+        Configuration.DrawGizmos(Color.red);
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Configuration.DrawGizmos(Color.red);
     }
 }
