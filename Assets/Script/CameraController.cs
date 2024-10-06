@@ -44,11 +44,6 @@ public class CameraController : MonoBehaviour
 
 
 
-    void OnDrawGizmos()
-    {
-        Configuration.DrawGizmos(Color.red);
-    }
-
     void OnDrawGizmosSelected()
     {
         Configuration.DrawGizmos(Color.red);
