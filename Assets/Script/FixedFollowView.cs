@@ -25,8 +25,21 @@ public class FixedFollowView : AView {
         float currentYaw = ComputeYaw(targetDirection);
         float currentPitch = ComputePitch(targetDirection);
 
-        config.Yaw = Mathf.Clamp(currentYaw, centralYaw - yawOffsetMax, centralYaw + yawOffsetMax);
-        config.Pitch = Mathf.Clamp(currentPitch, centralPitch - pitchOffsetMax, centralPitch + pitchOffsetMax);
+        float yawDelta = currentYaw - centralYaw;
+        float pitchDelta = currentPitch - centralPitch;
+
+        while (yawDelta > 180.0f)
+        {
+            yawDelta -= 360.0f;
+        }
+
+        while(yawDelta < -180.0f)
+        {
+            yawDelta += 360.0f;
+        }
+
+        config.Yaw = Mathf.Clamp(yawDelta, -yawOffsetMax, yawOffsetMax) + centralYaw;
+        config.Pitch = Mathf.Clamp(pitchDelta, -pitchOffsetMax, pitchOffsetMax) + centralPitch;
 
         return config;
     }

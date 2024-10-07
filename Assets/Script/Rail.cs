@@ -31,7 +31,53 @@ public class Rail : MonoBehaviour
 
     public Vector3 GetPosition(float distance)
     {
-        return Vector3.Lerp(_childsTransforms[0].position, _childsTransforms[_childsTransforms.Count - 1].position, distance);
+        float startDistance = 0;
+        float distanceReached = 0;
+        int leftIndex = -1;
+        int rightIndex = -1;
+
+        while (distance > length)
+        {
+            distance -= length;
+        }
+
+        while (distance < 0)
+        {
+            distance += length;
+        }
+
+        for (int i = 0; i < _childsTransforms.Count; i++)
+        {
+            if (i + 1 == _childsTransforms.Count)
+            {
+                if (isLoop)
+                {
+                    leftIndex = _childsTransforms.Count - 1;
+                    rightIndex = 0;
+                    distanceReached += Vector3.Distance(_childsTransforms[leftIndex].position, _childsTransforms[rightIndex].position);
+                }
+                break;
+            }
+
+            distanceReached += Vector3.Distance(_childsTransforms[i].position, _childsTransforms[i + 1].position);
+
+            if(distanceReached > distance)
+            {
+                leftIndex = i;
+                rightIndex = leftIndex + 1;
+                break;
+            }
+
+            startDistance = distanceReached;
+        }
+
+        if(leftIndex == -1 || rightIndex == -1)
+        {
+            leftIndex = _childsTransforms.Count - 1;
+            rightIndex = _childsTransforms.Count - 1;
+        }
+
+        return Vector3.Lerp(_childsTransforms[leftIndex].position, _childsTransforms[rightIndex].position, Mathf.InverseLerp(startDistance, distanceReached, distance));
     }
 
 #if UNITY_EDITOR
