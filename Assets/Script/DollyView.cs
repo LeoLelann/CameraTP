@@ -5,6 +5,10 @@ public class DollyView : AView {
     public Vector3 Distance;
     public GameObject target;
     public Rail rail;
+    public KeyCode NegativeInput = KeyCode.Q;
+    public KeyCode PositiveInput = KeyCode.D;
+
+    public bool isAuto;
 
     public override CameraConfig GetConfiguration()
     {
@@ -13,19 +17,27 @@ public class DollyView : AView {
         config.Fov = Fov;
         config.Distance = Distance;
 
-        int direction = 0;
-        if(Input.GetKey(KeyCode.D))
+        if(isAuto)
         {
-            direction = 1;
-        }
-        else if (Input.GetKey(KeyCode.Q))
-        {
-            direction = -1;
+            config.Pivot = rail.GetClosetPoint(target.transform.position);
         }
 
-        distanceOnRail += Time.deltaTime * speed * direction;
+        else
+        {
+            int direction = 0;
+            if(Input.GetKey(PositiveInput))
+            {
+                direction = 1;
+            }
+            else if (Input.GetKey(NegativeInput))
+            {
+                direction = -1;
+            }
 
-        config.Pivot = rail.GetPosition(distanceOnRail);
+            distanceOnRail += Time.deltaTime * speed * direction;
+
+            config.Pivot = rail.GetPosition(distanceOnRail);
+        }
 
         Vector3 heading = target.transform.position - config.Pivot;
         float distance = heading.magnitude;

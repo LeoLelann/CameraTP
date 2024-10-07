@@ -80,6 +80,39 @@ public class Rail : MonoBehaviour
         return Vector3.Lerp(_childsTransforms[leftIndex].position, _childsTransforms[rightIndex].position, Mathf.InverseLerp(startDistance, distanceReached, distance));
     }
 
+    public Vector3 GetClosetPoint(Vector3 targetLocation)
+    {
+        float minDistance = float.MaxValue;
+        Vector3 closestPoint = new Vector3();
+        for (int i = 0; i < _childsTransforms.Count; i++) {
+            if (i + 1 == _childsTransforms.Count) {
+                break;
+            }
+
+            Vector3 point = MathUtils.GetNearestPointOnSegment(_childsTransforms[i].position, _childsTransforms[i + 1].position, targetLocation);
+            float currentDistance = Vector3.Distance(point, targetLocation);
+
+            if(currentDistance < minDistance)
+            {
+                minDistance = currentDistance;
+                closestPoint = point;
+            }
+        }
+
+        if (isLoop)
+        {
+            Vector3 point = MathUtils.GetNearestPointOnSegment(_childsTransforms[_childsTransforms.Count - 1].position, _childsTransforms[0].position, targetLocation);
+            float currentDistance = Vector3.Distance(point, targetLocation);
+
+            if (currentDistance < minDistance)
+            {
+                closestPoint = point;
+            }
+        }
+
+        return closestPoint;
+    }
+
 #if UNITY_EDITOR
     [SerializeField]
     private Color _gizmoColor = Color.white;
