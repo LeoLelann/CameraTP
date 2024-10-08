@@ -19,6 +19,7 @@ public abstract class AView : MonoBehaviour
             CameraController.Instance.RemoveView(this);
         }
     }
+
     private void Start()
     {
         if (isActiveOnStart)
@@ -26,5 +27,4 @@ public abstract class AView : MonoBehaviour
             SetActive(true);
         }
     }
-
 }

@@ -10,6 +10,8 @@ public class CameraController : MonoBehaviour
     public static CameraController Instance => _instance;
     private List<AView> activeViews = new List<AView>();
 
+    private bool isCutRequested;
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -29,20 +31,34 @@ public class CameraController : MonoBehaviour
     {
         CameraComp = GetComponent<Camera>();
     }
+
     private void Update()
     {
+        if(activeViews.Count == 0)
+        {
+            return;
+        }
+
         Configuration = ComputeAverage();
         ApplyConfiguration();
+        if(isCutRequested)
+        {
+            // TODO
+            isCutRequested = false;
+        }
     }
 
-    void ApplyConfiguration()
+    private void ApplyConfiguration()
     {
         CameraComp.transform.position = Configuration.GetPos();
         CameraComp.transform.rotation = Configuration.GetRotation();
         CameraComp.fieldOfView = Configuration.Fov;
     }
 
-
+    public void Cut()
+    {
+        isCutRequested = true;
+    }
 
     private void OnDrawGizmos()
     {
@@ -58,6 +74,7 @@ public class CameraController : MonoBehaviour
     {
         activeViews.Add(view);
     }
+
     public void RemoveView(AView view)
     {
         activeViews.Remove(view);

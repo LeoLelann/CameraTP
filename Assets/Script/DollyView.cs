@@ -24,6 +24,7 @@ public class DollyView : AView {
 
         else
         {
+            //Input.GetAxisRaw("Horizontal");
             int direction = 0;
             if(Input.GetKey(PositiveInput))
             {
