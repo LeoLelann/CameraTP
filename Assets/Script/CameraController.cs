@@ -38,9 +38,6 @@ public class CameraController : MonoBehaviour
     {
         CameraComp = GetComponent<Camera>();
         //_target = new Vector3(Configuration.Yaw, Configuration.Pitch, Configuration.Roll);
-
-        targetConfig = ComputeAverage();
-        currentConfig = targetConfig;
     }
 
     private void Update()
@@ -51,20 +48,17 @@ public class CameraController : MonoBehaviour
         }
 
         targetConfig = ComputeAverage();
+
         if(isCutRequested)
         {
             currentConfig = targetConfig;
             isCutRequested = false;
         }
+
         SmoothConfiguration();
         ApplyConfiguration();
     }
-    /*    private void Smooth()
-        {
-            //transform.position = Vector3.SmoothDamp(CameraComp.transform.position, target.GetPos(), ref _target, 10f, 20f);
-            //_target = Vector3.SmoothDamp(CameraComp.transform.eulerAngles, _target, ref _velocity, 5f, 7f);
 
-        }*/
     private void SmoothConfiguration()
     {
         currentConfig.Yaw = Mathf.Lerp(currentConfig.Yaw, targetConfig.Yaw, Time.deltaTime * smoothingSpeed);
@@ -88,7 +82,6 @@ public class CameraController : MonoBehaviour
     {
         isCutRequested = true;
     }
-
 
     private void OnDrawGizmos()
     {

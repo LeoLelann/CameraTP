@@ -27,18 +27,44 @@ public class ViewVolumeBlender : MonoBehaviour{
 
     public void Update()
     {
-        // TODO (2: Blend)
-        return;
-
-        int maxPriority = int.MinValue;
-        foreach (AViewVolume Volume in ActiveViewVolumes)
+        for (int i = 0; i < ActiveViewVolumes.Count; i++)
         {
-            Volume.View.weight = 0;
+            if (i + 1 == ActiveViewVolumes.Count)
+            {
+                break;
+            }
 
-            //if(Volume.Priority > maxPriority)
-            //{
-            //    maxPriority = Volume.Priority;
-            //}
+            ActiveViewVolumes[i].View.weight = 0;
+
+            if (ActiveViewVolumes[i].Priority == ActiveViewVolumes[i + 1].Priority)
+            {
+                if(ActiveViewVolumes[i].Uid < ActiveViewVolumes[i + 1].Uid)
+                {
+                    continue;
+                }
+            }
+
+            if (ActiveViewVolumes[i].Priority < ActiveViewVolumes[i + 1].Priority)
+            {
+                continue;
+            }
+
+            AViewVolume copy = ActiveViewVolumes[i];
+            ActiveViewVolumes[i] = ActiveViewVolumes[i + 1];
+            ActiveViewVolumes[i + 1] = copy;
+        }
+
+        foreach (AViewVolume v in ActiveViewVolumes)
+        {
+            float weight = Mathf.Clamp01(v.ComputeSelfWeight());
+            float remainingWeight = 1.0f - weight;
+
+            foreach (AViewVolume volume in ActiveViewVolumes)
+            {
+                volume.View.weight *= remainingWeight;
+            }
+
+            v.View.weight += weight;
         }
     }
 

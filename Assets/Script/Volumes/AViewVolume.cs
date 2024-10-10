@@ -7,7 +7,7 @@ public abstract class AViewVolume : MonoBehaviour
     public int Priority = 0;
     public AView View;
 
-    private int Uid;
+    public int Uid;
     public static int NextUid = 0;
 
     protected bool IsActive { get; private set; }
@@ -18,13 +18,14 @@ public abstract class AViewVolume : MonoBehaviour
 
     protected void SetActive(bool isActive)
     {
-        IsActive = isActive;
-
-        if (isCutOnSwitch)
+#if UNITY_EDITOR
+        if(View == null)
         {
-            ViewVolumeBlender.Instance.Update();
-            CameraController.Instance.Cut();
+            return;
         }
+#endif
+
+        IsActive = isActive;
 
         if (IsActive)
         {
@@ -34,11 +35,21 @@ public abstract class AViewVolume : MonoBehaviour
         {
             ViewVolumeBlender.Instance.RemoveVolume(this);
         }
+
+        if (isCutOnSwitch)
+        {
+            ViewVolumeBlender.Instance.Update();
+            CameraController.Instance.Cut();
+        }
     }
 
     private void Awake()
     {
         Uid = NextUid;
         NextUid++;
+
+#if UNITY_EDITOR
+        Debug.LogWarning(name + " has a null view");
+#endif
     }
 }
