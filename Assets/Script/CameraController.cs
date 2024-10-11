@@ -17,6 +17,8 @@ public class CameraController : MonoBehaviour
     private List<AView> activeViews = new List<AView>();
     //private Vector3 _velocity;
 
+    private bool isCutRequested;
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -36,24 +38,27 @@ public class CameraController : MonoBehaviour
     {
         CameraComp = GetComponent<Camera>();
         //_target = new Vector3(Configuration.Yaw, Configuration.Pitch, Configuration.Roll);
-
-        targetConfig = ComputeAverage();
-        currentConfig = targetConfig;
     }
+
     private void Update()
     {
+        if(activeViews.Count == 0)
+        {
+            return;
+        }
+
         targetConfig = ComputeAverage();
+
+        if(isCutRequested)
+        {
+            currentConfig = targetConfig;
+            isCutRequested = false;
+        }
+
         SmoothConfiguration();
         ApplyConfiguration();
-        //target = Configuration;
-        //Smooth();
     }
-    /*    private void Smooth()
-        {
-            //transform.position = Vector3.SmoothDamp(CameraComp.transform.position, target.GetPos(), ref _target, 10f, 20f);
-            //_target = Vector3.SmoothDamp(CameraComp.transform.eulerAngles, _target, ref _velocity, 5f, 7f);
 
-        }*/
     private void SmoothConfiguration()
     {
         currentConfig.Yaw = Mathf.Lerp(currentConfig.Yaw, targetConfig.Yaw, Time.deltaTime * smoothingSpeed);
@@ -65,6 +70,7 @@ public class CameraController : MonoBehaviour
 
         currentConfig.Fov = Mathf.Lerp(currentConfig.Fov, targetConfig.Fov, Time.deltaTime * smoothingSpeed);
     }
+
     private void ApplyConfiguration()
     {
         CameraComp.transform.position = currentConfig.GetPos();
@@ -72,7 +78,10 @@ public class CameraController : MonoBehaviour
         CameraComp.fieldOfView = currentConfig.Fov;
     }
 
-
+    public void Cut()
+    {
+        isCutRequested = true;
+    }
 
     private void OnDrawGizmos()
     {
@@ -88,6 +97,7 @@ public class CameraController : MonoBehaviour
     {
         activeViews.Add(view);
     }
+
     public void RemoveView(AView view)
     {
         activeViews.Remove(view);
