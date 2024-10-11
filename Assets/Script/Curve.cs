@@ -1,13 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Curve : MonoBehaviour
+[Serializable]
+public class Curve
 {
     public Vector3 A;
     public Vector3 B;
     public Vector3 C;
     public Vector3 D;
+
+    [Range(0f, 1f)]
     public float t;
 
     public Vector3 GetPosition(float t)
