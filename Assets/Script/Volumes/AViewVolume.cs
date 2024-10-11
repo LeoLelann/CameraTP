@@ -49,7 +49,9 @@ public abstract class AViewVolume : MonoBehaviour
         NextUid++;
 
 #if UNITY_EDITOR
-        Debug.LogWarning(name + " has a null view");
+        if (View == null) {
+            Debug.LogWarning(name + " has a null view");
+        }
 #endif
     }
 }
