@@ -17,7 +17,8 @@ public class CameraController : MonoBehaviour
     private List<AView> activeViews = new List<AView>();
     //private Vector3 _velocity;
 
-    private bool isCutRequested;
+    //set as true by default to avoid a smoothing at start; computeAverage and currentConfig = targetConfig at start return errors
+    private bool isCutRequested = true;
 
     private void Awake()
     {
