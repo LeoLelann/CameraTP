@@ -9,7 +9,12 @@ public class TriggeredViewVolume : AViewVolume
 
     private void Start()
     {
-        GetComponent<Collider>().isTrigger = true;
+        List<Collider> colliders = new List<Collider>();
+        GetComponents<Collider>(colliders);
+        foreach (Collider collider in colliders)
+        {
+            collider.isTrigger = true;
+        }
     }
 
     private void OnTriggerEnter(Collider other)

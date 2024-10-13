@@ -46,6 +46,12 @@ public class FixedFollowView : AView {
 
     private Vector3 GetDirection(GameObject gameObject)
     {
+#if UNITY_EDITOR
+        if(gameObject == null)
+        {
+            return Vector3.zero;
+        }
+#endif
         Vector3 heading = gameObject.transform.position - transform.position;
         float distance = heading.magnitude;
         Vector3 direction = heading / distance;
